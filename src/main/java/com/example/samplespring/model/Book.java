@@ -1,10 +1,9 @@
 package com.example.samplespring.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Book {
@@ -16,8 +15,12 @@ public class Book {
     private String title;
     private String isbn;
 
-    public Book(Long id, String title, String isbn) {
-        this.id = id;
+    @ManyToMany
+    @JoinTable(name = "author_books", joinColumns = @JoinColumn(name = "book_id"),
+    inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private Set<Author> authors = new HashSet<>();
+
+    public Book(String title, String isbn) {
         this.title = title;
         this.isbn = isbn;
     }
@@ -48,6 +51,14 @@ public class Book {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
     }
 
     @Override
